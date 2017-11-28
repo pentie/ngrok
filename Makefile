@@ -50,3 +50,17 @@ clean:
 contributors:
 	echo "Contributors to ngrok, both large and small:\n" > CONTRIBUTORS
 	git log --raw | grep "^Author: " | sort | uniq | cut -d ' ' -f2- | sed 's/^/- /' | cut -d '<' -f1 >> CONTRIBUTORS
+
+static-server: BUILDTAGS=release
+static-server: deps
+	CGO_ENABLED=0 GOOS=linux go install \
+		-a -ldflags '-extldflags "-static"' \
+		-tags '$(BUILDTAGS)' ngrok/main/ngrokd
+
+static-client: BUILDTAGS=release
+static-client: deps
+	CGO_ENABLED=0 GOOS=linux go install \
+		-a -ldflags '-extldflags "-static"' \
+		-tags '$(BUILDTAGS)' ngrok/main/ngrok
+
+static-all: fmt static-client static-server
