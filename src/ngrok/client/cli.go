@@ -40,6 +40,7 @@ type Options struct {
 	config    string
 	logto     string
 	loglevel  string
+	serveraddr  string
 	authtoken string
 	httpauth  string
 	hostname  string
@@ -70,6 +71,11 @@ func ParseArgs() (opts *Options, err error) {
 		"log-level",
 		"DEBUG",
 		"The level of messages to log. One of: DEBUG, INFO, WARNING, ERROR")
+
+	serveraddr := flag.String(
+		"serveraddr",
+		"",
+		"custom ngrokd server address.")
 
 	authtoken := flag.String(
 		"authtoken",
@@ -102,6 +108,7 @@ func ParseArgs() (opts *Options, err error) {
 		config:    *config,
 		logto:     *logto,
 		loglevel:  *loglevel,
+		serveraddr:  *serveraddr,
 		httpauth:  *httpauth,
 		subdomain: *subdomain,
 		protocol:  *protocol,
