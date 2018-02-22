@@ -16,6 +16,7 @@ Examples:
 	ngrok 80
 	ngrok -subdomain=example 8080
 	ngrok -proto=tcp 22
+	ngrok -proto=tcp 22 52222
 	ngrok -hostname="example.com" -httpauth="user:password" 10.0.0.1
 
 
@@ -129,8 +130,8 @@ func ParseArgs() (opts *Options, err error) {
 		return
 
 	default:
-		if len(flag.Args()) > 1 {
-			err = fmt.Errorf("You may only specify one port to tunnel to on the command line, got %d: %v",
+		if len(flag.Args()) > 2 {
+			err = fmt.Errorf("You may only specify one port and the remote port to tunnel to on the command line, got %d: %v",
 				len(flag.Args()),
 				flag.Args())
 			return

@@ -158,6 +158,16 @@ func LoadConfiguration(opts *Options) (config *Configuration, err error) {
 			if config.Tunnels["default"].Protocols[proto], err = normalizeAddress(opts.args[0], ""); err != nil {
 				return
 			}
+
+                        if proto == "tcp" && len(opts.args) == 2 {
+                                u, err := strconv.ParseUint(opts.args[1], 10, 64)
+                                if err != nil {
+                                    fmt.Println(err)
+                                    os.Exit(0)
+                                }
+                                config.Tunnels["default"].RemotePort = uint16(u)
+                        }
+
 		}
 
 	// list tunnels
