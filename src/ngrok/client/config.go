@@ -166,12 +166,15 @@ func LoadConfiguration(opts *Options) (config *Configuration, err error) {
 			}
 
                         if proto == "tcp" && len(opts.args) == 2 {
-                                u, err := strconv.ParseUint(opts.args[1], 10, 64)
-                                if err != nil {
-                                    fmt.Println(err)
+                                if uport, err := strconv.ParseUint(opts.args[1], 10, 64); err != nil {
+                                    fmt.Println("Error parsing remoteport: %s", err)
                                     os.Exit(0)
-                                }
-                                config.Tunnels["default"].RemotePort = uint16(u)
+                                } else if uport > 65535 {
+                                    fmt.Println("Remoteport must not greater than 65535")
+                                    os.Exit(0)
+                                } else {
+				    config.Tunnels["default"].RemotePort = uint16(uport)
+				}
                         }
 
 		}
