@@ -3,10 +3,10 @@ package client
 import (
 	"fmt"
 	"ngrok/client/mvc"
-	"ngrok/client/views/term"
+//	"ngrok/client/views/term"
 	"ngrok/client/views/web"
 	"ngrok/log"
-	"ngrok/proto"
+//	"ngrok/proto"
 	"ngrok/util"
 	"sync"
 )
@@ -163,6 +163,7 @@ func (ctl *Controller) Run(config *Configuration) {
 	}
 
 	// init term ui
+/*
 	var termView *term.TermView
 	if config.LogTo != "stdout" {
 		termView = term.NewTermView(ctl)
@@ -182,6 +183,7 @@ func (ctl *Controller) Run(config *Configuration) {
 		default:
 		}
 	}
+*/
 
 	ctl.Go(ctl.model.Run)
 
