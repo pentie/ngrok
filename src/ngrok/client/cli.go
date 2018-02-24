@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const usage1 string = `Usage: %s [OPTIONS] <local port or address>
+const usage1 string = `Usage: %s [OPTIONS] <local port or address> <remote port (TCP Only) >
 Options:
 `
 
