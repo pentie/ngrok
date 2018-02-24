@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"ngrok/client/mvc"
 //	"ngrok/client/views/term"
-	"ngrok/client/views/web"
+//	"ngrok/client/views/web"
 	"ngrok/log"
 //	"ngrok/proto"
 	"ngrok/util"
@@ -38,7 +38,7 @@ type Controller struct {
 	model mvc.Model
 
 	// the views
-	views []mvc.View
+//	views []mvc.View
 
 	// internal structure to issue commands to the controller
 	cmds chan command
@@ -56,7 +56,7 @@ func NewController() *Controller {
 		Logger:  log.NewPrefixLogger("controller"),
 		updates: util.NewBroadcast(),
 		cmds:    make(chan command),
-		views:   make([]mvc.View, 0),
+		//views:   make([]mvc.View, 0),
 		state:   make(chan mvc.State),
 	}
 
@@ -103,6 +103,7 @@ func (ctl *Controller) doShutdown() {
 
 	var wg sync.WaitGroup
 
+/*
 	// wait for all of the views, plus the model
 	wg.Add(len(ctl.views) + 1)
 
@@ -113,6 +114,7 @@ func (ctl *Controller) doShutdown() {
 			wg.Done()
 		})
 	}
+*/
 
 	ctl.Go(func() {
 		ctl.model.Shutdown()
@@ -122,10 +124,13 @@ func (ctl *Controller) doShutdown() {
 	wg.Wait()
 }
 
+/*
 func (ctl *Controller) AddView(v mvc.View) {
 	ctl.views = append(ctl.views, v)
 }
 
+
+*/
 func (ctl *Controller) GetWebInspectAddr() string {
 	return ctl.config.InspectAddr
 }
@@ -155,6 +160,7 @@ func (ctl *Controller) Run(config *Configuration) {
 	// init the model
 	var state mvc.State = model
 
+/*
 	// init web ui
 	var webView *web.WebView
 	if config.InspectAddr != "disabled" {
@@ -163,7 +169,6 @@ func (ctl *Controller) Run(config *Configuration) {
 	}
 
 	// init term ui
-/*
 	var termView *term.TermView
 	if config.LogTo != "stdout" {
 		termView = term.NewTermView(ctl)
