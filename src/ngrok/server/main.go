@@ -55,7 +55,7 @@ func NewProxy(pxyConn conn.Conn, regPxy *msg.RegProxy) {
 // for ease of deployment. The hope is that by running on port 443, using
 // TLS and running all connections over the same port, we can bust through
 // restrictive firewalls.
-func tunnelListener(opts *Options, tlsConfig *tls.Config) {
+func tunnelListener(tlsConfig *tls.Config) {
 	// listen for incoming connections
 	listener, err := conn.Listen(opts.tunnelAddr, "tun", tlsConfig)
 	if err != nil {
@@ -86,7 +86,7 @@ func tunnelListener(opts *Options, tlsConfig *tls.Config) {
 
 			switch m := rawMsg.(type) {
 			case *msg.Auth:
-				NewControl(tunnelConn, m, opts.authToken)
+				NewControl(tunnelConn, m)
 
 			case *msg.RegProxy:
 				NewProxy(tunnelConn, m)
@@ -137,5 +137,5 @@ func Main() {
 	}
 
 	// ngrok clients
-	tunnelListener(opts, tlsConfig)
+	tunnelListener(tlsConfig)
 }

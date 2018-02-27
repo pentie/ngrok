@@ -60,7 +60,7 @@ type Control struct {
 	shutdown *util.Shutdown
 }
 
-func NewControl(ctlConn conn.Conn, authMsg *msg.Auth, authToken string) {
+func NewControl(ctlConn conn.Conn, authMsg *msg.Auth) {
 	var err error
 
 	// create the object
@@ -82,7 +82,7 @@ func NewControl(ctlConn conn.Conn, authMsg *msg.Auth, authToken string) {
 		ctlConn.Close()
 	}
 
-	if authToken != authMsg.User {
+	if opts.authToken != "" && opts.authToken != authMsg.User {
 		failAuth(fmt.Errorf("AuthToken does not match."))
 		return
 	}
