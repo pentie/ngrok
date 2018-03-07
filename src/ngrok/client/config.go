@@ -263,33 +263,3 @@ func validateProtocol(proto, propName string) (err error) {
 	return
 }
 
-func SaveAuthToken(configPath, authtoken string) (err error) {
-	// empty configuration by default for the case that we can't read it
-	c := new(Configuration)
-
-	// read the configuration
-	oldConfigBytes, err := ioutil.ReadFile(configPath)
-	if err == nil {
-		// unmarshal if we successfully read the configuration file
-		if err = yaml.Unmarshal(oldConfigBytes, c); err != nil {
-			return
-		}
-	}
-
-	// no need to save, the authtoken is already the correct value
-	if c.AuthToken == authtoken {
-		return
-	}
-
-	// update auth token
-	c.AuthToken = authtoken
-
-	// rewrite configuration
-	newConfigBytes, err := yaml.Marshal(c)
-	if err != nil {
-		return
-	}
-
-	err = ioutil.WriteFile(configPath, newConfigBytes, 0600)
-	return
-}

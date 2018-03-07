@@ -262,9 +262,6 @@ func (c *ClientModel) control() {
 	c.serverVersion = authResp.MmVersion
 	c.Info("Authenticated with server, client id: %v", c.id)
 	c.update()
-	if err = SaveAuthToken(c.configPath, c.authToken); err != nil {
-		c.Error("Failed to save auth token: %v", err)
-	}
 
 	// request tunnels
 	reqIdToTunnelConfig := make(map[string]*TunnelConfiguration)
