@@ -2,19 +2,20 @@
 export GOPATH:=$(shell pwd)
 
 BUILDTAGS=debug
+LDFLAGS=
 default: all
 
 deps: assets
 	go get -tags '$(BUILDTAGS)' -d -v ngrok/...
 
 server: deps
-	go install -tags '$(BUILDTAGS)' ngrok/main/ngrokd
+	go install -ldflags '$(LDFLAGS)' -tags '$(BUILDTAGS)' ngrok/main/ngrokd
 
 fmt:
 	go fmt ngrok/...
 
 client: deps
-	go install -tags '$(BUILDTAGS)' ngrok/main/ngrok
+	go install -ldflags '$(LDFLAGS)' -tags '$(BUILDTAGS)' ngrok/main/ngrok
 
 assets: client-assets server-assets
 
@@ -34,9 +35,11 @@ server-assets: bin/go-bindata
 		assets/server/...
 
 release-client: BUILDTAGS=release
+release-client: LDFLAGS=-s -w
 release-client: client
 
 release-server: BUILDTAGS=release
+release-server: LDFLAGS=-s -w
 release-server: server
 
 release-all: fmt release-client release-server
@@ -52,15 +55,15 @@ contributors:
 	git log --raw | grep "^Author: " | sort | uniq | cut -d ' ' -f2- | sed 's/^/- /' | cut -d '<' -f1 >> CONTRIBUTORS
 
 static-server: BUILDTAGS=release
+static-server: LDFLAGS=-s -w -extldflags "-static"
 static-server: deps
-	CGO_ENABLED=0 GOOS=linux go install \
-		-a -ldflags '-extldflags "-static"' \
-		-tags '$(BUILDTAGS)' ngrok/main/ngrokd
+	CGO_ENABLED=0 go install \
+		-a -ldflags '$(LDFLAGS)' -tags '$(BUILDTAGS)' ngrok/main/ngrokd
 
 static-client: BUILDTAGS=release
+static-client: LDFLAGS=-s -w -extldflags "-static"
 static-client: deps
-	CGO_ENABLED=0 GOOS=linux go install \
-		-a -ldflags '-extldflags "-static"' \
-		-tags '$(BUILDTAGS)' ngrok/main/ngrok
+	CGO_ENABLED=0 go install \
+		-a -ldflags '$(LDFLAGS)' -tags '$(BUILDTAGS)' ngrok/main/ngrok
 
 static-all: fmt static-client static-server
